@@ -1,2 +1,2 @@
 # PaddleOCR
-Private repo for training Japanese OCR
+Clone repo for training Japanese OCR
