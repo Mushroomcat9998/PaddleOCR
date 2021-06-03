@@ -41,6 +41,7 @@ This document will briefly introduce how to use the multilingual model.
 <a name="Install"></a>
 ## 1 Installation
 
+PaddleOCR provides two installation methods
 <a name="paddle_install"></a>
 ### 1.1 paddle installation
 ```
@@ -48,7 +49,7 @@ This document will briefly introduce how to use the multilingual model.
 pip install paddlepaddle
 
 # gpu
-pip instll paddlepaddle-gpu
+pip install paddlepaddle-gpu
 ```
 
 <a name="paddleocr_package_install"></a>
@@ -66,12 +67,12 @@ pip3 install dist/paddleocr-x.x.x-py3-none-any.whl # x.x.x is the version number
 ```
 
 <a name="Quick_use"></a>
-## 2 Quick use
+## 2 Quick Use
 
 <a name="Command_line_operation"></a>
-### 2.1 Command line operation
+### 2.1 Command Line Operation
 
-View help information
+* View help information
 
 ```
 paddleocr -h
@@ -79,36 +80,41 @@ paddleocr -h
 
 * Whole image prediction (detection + recognition)
 
-Paddleocr currently supports 80 languages, which can be switched by modifying the --lang parameter.
-The specific supported [language] (#language_abbreviations) can be viewed in the table.
+PaddleOCR currently supports 80 languages, which can be switched by modifying the --lang parameter.
+The specific supported [language](#language_abbreviations) can be viewed in the table.
 
 ``` bash
-
-paddleocr --image_dir doc/imgs/japan_2.jpg --lang=japan
+paddleocr --image_dir doc/imgs_en/254.jpg --lang=en
 ```
-![](https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.0/doc/imgs/japan_2.jpg)
+<div align="center">
+    <img src="../imgs_en/254.jpg" width="300" height="600">
+    <img src="../imgs_results/multi_lang/img_02.jpg" width="600" height="600">
+</div>
 
 The result is a list, each item contains a text box, text and recognition confidence
 ```text
-[[[671.0, 60.0], [847.0, 63.0], [847.0, 104.0], [671.0, 102.0]], ('もちもち', 0.9993342)]
-[[[394.0, 82.0], [536.0, 77.0], [538.0, 127.0], [396.0, 132.0]], ('自然の', 0.9919842)]
-[[[880.0, 89.0], [1014.0, 93.0], [1013.0, 127.0], [879.0, 124.0]], ('とろっと', 0.9976762)]
-[[[1067.0, 101.0], [1294.0, 101.0], [1294.0, 138.0], [1067.0, 138.0]], ('后味のよい', 0.9988712)]
+[('PHO CAPITAL', 0.95723116), [[66.0, 50.0], [327.0, 44.0], [327.0, 76.0], [67.0, 82.0]]]
+[('107 State Street', 0.96311164), [[72.0, 90.0], [451.0, 84.0], [452.0, 116.0], [73.0, 121.0]]]
+[('Montpelier Vermont', 0.97389287), [[69.0, 132.0], [501.0, 126.0], [501.0, 158.0], [70.0, 164.0]]]
+[('8022256183', 0.99810505), [[71.0, 175.0], [363.0, 170.0], [364.0, 202.0], [72.0, 207.0]]]
+[('REG 07-24-201706:59 PM', 0.93537045), [[73.0, 299.0], [653.0, 281.0], [654.0, 318.0], [74.0, 336.0]]]
+[('045555', 0.99346405), [[509.0, 331.0], [651.0, 325.0], [652.0, 356.0], [511.0, 362.0]]]
+[('CT1', 0.9988654), [[535.0, 367.0], [654.0, 367.0], [654.0, 406.0], [535.0, 406.0]]]
 ......
 ```
 
 * Recognition
 
 ```bash
-paddleocr --image_dir doc/imgs_words/japan/1.jpg --det false --lang=japan
+paddleocr --image_dir doc/imgs_words_en/word_308.png --det false --lang=en
 ```
 
-![](https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.0/doc/imgs_words/japan/1.jpg)
+![](https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.1/doc/imgs_words_en/word_308.png)
 
 The result is a tuple, which returns the recognition result and recognition confidence
 
 ```text
-('したがって', 0.99965394)
+(0.99879867, 'LITTLE')
 ```
 
 * Detection
@@ -127,9 +133,9 @@ The result is a list, each item contains only text boxes
 ```
 
 <a name="python_script_running"></a>
-### 2.2 python script running
+### 2.2 Python Script Running
 
-ppocr also supports running in python scripts for easy embedding in your own code:
+PaddleOCR also supports running in python scripts for easy embedding in your own code:
 
 * Whole image prediction (detection + recognition)
 
@@ -153,7 +159,7 @@ image = Image.open(img_path).convert('RGB')
 boxes = [line[0] for line in result]
 txts = [line[1][0] for line in result]
 scores = [line[1][1] for line in result]
-im_show = draw_ocr(image, boxes, txts, scores, font_path='/path/to/PaddleOCR/doc/fonts/korean.ttf')
+im_show = draw_ocr(image, boxes, txts, scores, font_path='doc/fonts/korean.ttf')
 im_show = Image.fromarray(im_show)
 im_show.save('result.jpg')
 ```
@@ -162,12 +168,12 @@ Visualization of results:
 ![](https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.1/doc/imgs_results/korean.jpg)
 
 
-ppocr also supports direction classification. For more usage methods, please refer to: [whl package instructions](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.0/doc/doc_ch/whl.md).
+ppocr also supports direction classification. For more usage methods, please refer to: [whl package instructions](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.0/doc/doc_en/whl_en.md).
 
 <a name="Custom_training"></a>
-## 3 Custom training
+## 3 Custom Training
 
-ppocr supports using your own data for custom training or finetune, where the recognition model can refer to [French configuration file](../../configs/rec/multi_language/rec_french_lite_train.yml)
+PaddleOCR supports using your own data for custom training or finetune, where the configuration file can refer to [French model](../../configs/rec/multi_language/rec_french_lite_train.yml)
 Modify the training data path, dictionary and other parameters.
 
 For specific data preparation and training process, please refer to: [Text Detection](../doc_en/detection_en.md), [Text Recognition](../doc_en/recognition_en.md), more functions such as predictive deployment,
@@ -180,12 +186,29 @@ For functions such as data annotation, you can read the complete [Document Tutor
 In addition to installing the whl package for quick forecasting,
 ppocr also provides a variety of forecasting deployment methods.
 If necessary, you can read related documents:
-
-- [Python Inference](./doc/doc_en/inference_en.md)
-- [C++ Inference](./deploy/cpp_infer/readme_en.md)
-- [Serving](./deploy/hubserving/readme_en.md)
+- [Python Inference](./inference_en.md)
+- [C++ Inference](../../deploy/cpp_infer/readme_en.md)
+- [Serving](../../deploy/hubserving/readme_en.md)
 - [Mobile](https://github.com/PaddlePaddle/PaddleOCR/blob/develop/deploy/lite/readme_en.md)
-- [Benchmark](./doc/doc_en/benchmark_en.md)
+
+
+The deployment tutorial uses the Chinese model by default. If you need to use other language models,
+please replace the model files and dictionaries yourself:
+
+|model name| dict file | description|config|model size|download|
+| --- | --- | --- |--- | --- | --- |
+| french_mobile_v2.0_rec | ppocr/utils/dict/french_dict.txt | Lightweight model for French recognition|[rec_french_lite_train.yml](../../configs/rec/multi_language/rec_french_lite_train.yml)|2.65M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/french_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/french_mobile_v2.0_rec_train.tar) |
+| german_mobile_v2.0_rec | ppocr/utils/dict/german_dict.txt | Lightweight model for German recognition|[rec_german_lite_train.yml](../../configs/rec/multi_language/rec_german_lite_train.yml)|2.65M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/german_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/german_mobile_v2.0_rec_train.tar) |
+| korean_mobile_v2.0_rec | ppocr/utils/dict/korean_dict.txt | Lightweight model for Korean recognition|[rec_korean_lite_train.yml](../../configs/rec/multi_language/rec_korean_lite_train.yml)|3.9M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/korean_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/korean_mobile_v2.0_rec_train.tar) |
+| japan_mobile_v2.0_rec | ppocr/utils/dict/japan_dict.txt | Lightweight model for Japanese recognition|[rec_japan_lite_train.yml](../../configs/rec/multi_language/rec_japan_lite_train.yml)|4.23M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/japan_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/japan_mobile_v2.0_rec_train.tar) |
+| chinese_cht_mobile_v2.0_rec | ppocr/utils/dict/chinese_cht_dict.txt | Lightweight model for chinese cht recognition|rec_chinese_cht_lite_train.yml|5.63M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/chinese_cht_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/chinese_cht_mobile_v2.0_rec_train.tar) |
+| te_mobile_v2.0_rec | ppocr/utils/dict/te_dict.txt | Lightweight model for Telugu recognition|rec_te_lite_train.yml|2.63M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/te_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/te_mobile_v2.0_rec_train.tar) |
+| ka_mobile_v2.0_rec | ppocr/utils/dict/ka_dict.txt | Lightweight model for Kannada recognition|rec_ka_lite_train.yml|2.63M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/ka_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/ka_mobile_v2.0_rec_train.tar) |
+| ta_mobile_v2.0_rec | ppocr/utils/dict/ta_dict.txt | Lightweight model for Tamil recognition|rec_ta_lite_train.yml|2.63M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/ta_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/ta_mobile_v2.0_rec_train.tar) |
+| latin_mobile_v2.0_rec | ppocr/utils/dict/latin_dict.txt | Lightweight model for latin recognition |  [rec_latin_lite_train.yml](../../configs/rec/multi_language/rec_latin_lite_train.yml) |2.6M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/latin_ppocr_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/latin_ppocr_mobile_v2.0_rec_train.tar) |
+| arabic_mobile_v2.0_rec |  ppocr/utils/dict/arabic_dict.txt | Lightweight model for arabic recognition | [rec_arabic_lite_train.yml](../../configs/rec/multi_language/rec_arabic_lite_train.yml) |2.6M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/arabic_ppocr_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/arabic_ppocr_mobile_v2.0_rec_train.tar) |
+| cyrillic_mobile_v2.0_rec | ppocr/utils/dict/cyrillic_dict.txt | Lightweight model for cyrillic recognition | [rec_cyrillic_lite_train.yml](../../configs/rec/multi_language/rec_cyrillic_lite_train.yml) |2.6M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/cyrillic_ppocr_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/cyrillic_ppocr_mobile_v2.0_rec_train.tar) |
+| devanagari_mobile_v2.0_rec | ppocr/utils/dict/devanagari_dict.txt | Lightweight model for devanagari recognition | [rec_devanagari_lite_train.yml](../../configs/rec/multi_language/rec_devanagari_lite_train.yml) |2.6M|[inference model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/devanagari_ppocr_mobile_v2.0_rec_infer.tar) / [trained model](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/devanagari_ppocr_mobile_v2.0_rec_train.tar) |
 
 
 <a name="language_abbreviations"></a>

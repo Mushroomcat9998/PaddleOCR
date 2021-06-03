@@ -1,25 +1,25 @@
 Global:
   use_gpu: True
-  epoch_num: 400
+  epoch_num: 100
   log_smooth_window: 20
-  print_batch_step: 10
-  save_model_dir: ./output/rec/b3_rare_r34_none_gru/
-  save_epoch_step: 3
+  print_batch_step: 100
+  save_model_dir: /content/drive/MyDrive/rec_r34_vd_tps_bilstm_att
+  save_epoch_step: 
   # evaluation is run every 5000 iterations after the 4000th iteration
   eval_batch_step: [0, 2000]
   cal_metric_during_train: True
   pretrained_model:
-  checkpoints:
+  checkpoints: /content/drive/MyDrive/rec_r34_vd_tps_bilstm_att/latest
   save_inference_dir:
   use_visualdl: False
   infer_img: doc/imgs_words/ch/word_1.jpg
   # for data or label process
-  character_dict_path: 
-  character_type: en
-  max_text_length: 25
+  character_dict_path: /content/drive/MyDrive/vocab_temp.txt
+  character_type: japan
+  max_text_length: 32
   infer_mode: False
-  use_space_char: False
-  save_res_path: ./output/rec/predicts_b3_rare_r34_none_gru.txt
+  use_space_char: True
+  save_res_path: /content/drive/MyDrive/predicts_rec_r34_vd_tps_bilstm_att.txt
 
 
 Optimizer:
@@ -49,7 +49,7 @@ Architecture:
     hidden_size: 256 #96
   Head:
     name: AttentionHead  # AttentionHead
-    hidden_size: 256 #
+    hidden_size: 256 
     l2_decay: 0.00001
 
 Loss:
@@ -64,38 +64,40 @@ Metric:
 
 Train:
   dataset:
-    name: LMDBDataSet
-    data_dir: ./train_data/data_lmdb_release/training/
+    name: SimpleDataSet
+    data_dir: /content/data_700k/short
+    label_file_list: ["/content/data_700k/short/train.txt"]
     transforms:
       - DecodeImage: # load image
           img_mode: BGR
           channel_first: False
       - AttnLabelEncode: # Class handling label
       - RecResizeImg:
-          image_shape: [3, 32, 100]
+          image_shape: [3, 32, 256]
       - KeepKeys:
           keep_keys: ['image', 'label', 'length'] # dataloader will return list in this order
   loader:
     shuffle: True
-    batch_size_per_card: 256
+    batch_size_per_card: 128
     drop_last: True
-    num_workers: 8
+    num_workers: 2
 
 Eval:
   dataset:
-    name: LMDBDataSet
-    data_dir: ./train_data/data_lmdb_release/validation/
+    name: SimpleDataSet
+    data_dir: /content/data_700k/short
+    label_file_list: ["/content/data_700k/short/test.txt"]
     transforms:
       - DecodeImage: # load image
           img_mode: BGR
           channel_first: False
       - AttnLabelEncode: # Class handling label
       - RecResizeImg:
-          image_shape: [3, 32, 100]
+          image_shape: [3, 32, 256]
       - KeepKeys:
           keep_keys: ['image', 'label', 'length'] # dataloader will return list in this order
   loader:
     shuffle: False
     drop_last: False
-    batch_size_per_card: 256
-    num_workers: 8
+    batch_size_per_card: 128
+    num_workers: 2

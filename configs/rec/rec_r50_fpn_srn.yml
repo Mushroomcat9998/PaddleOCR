@@ -1,12 +1,12 @@
 Global:
   use_gpu: True
-  epoch_num: 200
+  epoch_num: 72
   log_smooth_window: 20
-  print_batch_step: 200
+  print_batch_step: 5
   save_model_dir: ./output/rec/srn_new
   save_epoch_step: 3
   # evaluation is run every 5000 iterations after the 4000th iteration
-  eval_batch_step: [0, 2000]
+  eval_batch_step: [0, 5000]
   cal_metric_during_train: True
   pretrained_model: 
   checkpoints:
@@ -14,8 +14,8 @@ Global:
   use_visualdl: False
   infer_img: doc/imgs_words/ch/word_1.jpg
   # for data or label process
-  character_dict_path: /home/nlp/tmp/PaddleOCR/vocab_temp.txt
-  character_type: japan
+  character_dict_path: 
+  character_type: en
   max_text_length: 25
   num_heads: 8
   infer_mode: False
@@ -58,16 +58,15 @@ Metric:
 
 Train:
   dataset:
-    name: SimpleDataSet
-    data_dir: /data/cv/ocr/data_1400k/short
-    label_file_list: ["/data/cv/ocr/data_1400k/short/train.txt"]
+    name: LMDBDataSet
+    data_dir: ./train_data/data_lmdb_release/training/
     transforms:
       - DecodeImage: # load image
           img_mode: BGR
           channel_first: False
       - SRNLabelEncode: # Class handling label
       - SRNRecResizeImg:
-          image_shape: [1, 64, 512]
+          image_shape: [1, 64, 256]
       - KeepKeys:
           keep_keys: ['image',
                       'label',
@@ -78,22 +77,21 @@ Train:
                       'gsrm_slf_attn_bias2'] # dataloader will return list in this order
   loader:
     shuffle: False
-    batch_size_per_card: 32
+    batch_size_per_card: 64
     drop_last: False
     num_workers: 4
 
 Eval:
   dataset:
-    name: SimpleDataSet
-    data_dir: /data/cv/ocr/data_1400k/short
-    label_file_list: ["/data/cv/ocr/data_1400k/short/test.txt"]
+    name: LMDBDataSet
+    data_dir: ./train_data/data_lmdb_release/validation/
     transforms:
       - DecodeImage: # load image
           img_mode: BGR
           channel_first: False
       - SRNLabelEncode: # Class handling label
       - SRNRecResizeImg:
-          image_shape: [1, 64, 512]
+          image_shape: [1, 64, 256]
       - KeepKeys:
           keep_keys: ['image',
                       'label',

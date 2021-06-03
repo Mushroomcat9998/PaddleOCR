@@ -47,7 +47,7 @@ PaddleOCR 旨在打造一套丰富、领先、且实用的OCR工具库，不仅�
 pip install paddlepaddle
 
 # gpu
-pip instll paddlepaddle-gpu
+pip install paddlepaddle-gpu
 ```
 
 <a name="paddleocr_package_安装"></a>
@@ -82,39 +82,43 @@ Paddleocr目前支持80个语种，可以通过修改--lang参数进行切换，
 
 ``` bash
 
-paddleocr --image_dir doc/imgs/japan_2.jpg --lang=japan
+paddleocr --image_dir doc/imgs_en/254.jpg --lang=en
 ```
 
 <div align="center">
-    <img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.1/doc/imgs/japan_2.jpg" width="800">
+    <img src="../imgs_en/254.jpg" width="300" height="600">
+    <img src="../imgs_results/multi_lang/img_02.jpg" width="600" height="600">
 </div>
 
 
 结果是一个list，每个item包含了文本框，文字和识别置信度
 ```text
-[[[671.0, 60.0], [847.0, 63.0], [847.0, 104.0], [671.0, 102.0]], ('もちもち', 0.9993342)]
-[[[394.0, 82.0], [536.0, 77.0], [538.0, 127.0], [396.0, 132.0]], ('天然の', 0.9919842)]
-[[[880.0, 89.0], [1014.0, 93.0], [1013.0, 127.0], [879.0, 124.0]], ('とろっと', 0.9976762)]
-[[[1067.0, 101.0], [1294.0, 101.0], [1294.0, 138.0], [1067.0, 138.0]], ('後味のよい', 0.9988712)]
+[('PHO CAPITAL', 0.95723116), [[66.0, 50.0], [327.0, 44.0], [327.0, 76.0], [67.0, 82.0]]]
+[('107 State Street', 0.96311164), [[72.0, 90.0], [451.0, 84.0], [452.0, 116.0], [73.0, 121.0]]]
+[('Montpelier Vermont', 0.97389287), [[69.0, 132.0], [501.0, 126.0], [501.0, 158.0], [70.0, 164.0]]]
+[('8022256183', 0.99810505), [[71.0, 175.0], [363.0, 170.0], [364.0, 202.0], [72.0, 207.0]]]
+[('REG 07-24-201706:59 PM', 0.93537045), [[73.0, 299.0], [653.0, 281.0], [654.0, 318.0], [74.0, 336.0]]]
+[('045555', 0.99346405), [[509.0, 331.0], [651.0, 325.0], [652.0, 356.0], [511.0, 362.0]]]
+[('CT1', 0.9988654), [[535.0, 367.0], [654.0, 367.0], [654.0, 406.0], [535.0, 406.0]]]
 ......
 ```
 
 * 识别预测
 
 ```bash
-paddleocr --image_dir doc/imgs_words/japan/1.jpg   --det false --lang=japan
+paddleocr --image_dir doc/imgs_words_en/word_308.png --det false --lang=en
 ```
 
 结果是一个tuple，返回识别结果和识别置信度
 
 ```text
-('したがって', 0.99965394)
+(0.99879867, 'LITTLE')
 ```
 
 * 检测预测
 
 ```
-paddleocr --image_dir PaddleOCR/doc/imgs/11.jpg --rec false
+paddleocr --image_dir doc/imgs/11.jpg --rec false
 ```
 
 结果是一个list，每个item只包含文本框
@@ -138,7 +142,7 @@ from paddleocr import PaddleOCR, draw_ocr
 
 # 同样也是通过修改 lang 参数切换语种
 ocr = PaddleOCR(lang="korean") # 首次执行会自动下载模型文件
-img_path = 'doc/imgs/korean_1.jpg '
+img_path = 'doc/imgs/korean_1.jpg'
 result = ocr.ocr(img_path)
 # 可通过参数控制单独执行识别、检测
 # result = ocr.ocr(img_path, det=False) 只执行识别
@@ -153,7 +157,7 @@ image = Image.open(img_path).convert('RGB')
 boxes = [line[0] for line in result]
 txts = [line[1][0] for line in result]
 scores = [line[1][1] for line in result]
-im_show = draw_ocr(image, boxes, txts, scores, font_path='/path/to/PaddleOCR/doc/fonts/korean.ttf')
+im_show = draw_ocr(image, boxes, txts, scores, font_path='doc/fonts/korean.ttf')
 im_show = Image.fromarray(im_show)
 im_show.save('result.jpg')
 ```
@@ -179,11 +183,28 @@ ppocr 支持使用自己的数据进行自定义训练或finetune, 其中识别�
 ## 4 预测部署
 
 除了安装whl包进行快速预测，ppocr 也提供了多种预测部署方式，如有需求可阅读相关文档：
-- [基于Python脚本预测引擎推理](./doc/doc_ch/inference.md)
-- [基于C++预测引擎推理](./deploy/cpp_infer/readme.md)
-- [服务化部署](./deploy/hubserving/readme.md)
+
+部署教程默认使用中文模型，如需使用其他语种模型，请自行替换模型文件和字典：
+
+|模型名称|字典文件|模型简介|配置文件|下载地址|
+| --- | --- | --- | --- | --- |
+| french_mobile_v2.0_rec | ppocr/utils/dict/french_dict.txt | 法文识别 | [rec_french_lite_train.yml](../../configs/rec/multi_language/rec_french_lite_train.yml) | [推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/french_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/french_mobile_v2.0_rec_train.tar) |
+| german_mobile_v2.0_rec | ppocr/utils/dict/german_dict.txt |德文识别|[rec_german_lite_train.yml](../../configs/rec/multi_language/rec_german_lite_train.yml)|[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/german_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/german_mobile_v2.0_rec_train.tar) |
+| korean_mobile_v2.0_rec | ppocr/utils/dict/korean_dict.txt |韩文识别|[rec_korean_lite_train.yml](../../configs/rec/multi_language/rec_korean_lite_train.yml)|[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/korean_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/korean_mobile_v2.0_rec_train.tar) |
+| japan_mobile_v2.0_rec | ppocr/utils/dict/japan_dict.txt |日文识别|[rec_japan_lite_train.yml](../../configs/rec/multi_language/rec_japan_lite_train.yml)|[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/japan_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/japan_mobile_v2.0_rec_train.tar) |
+| chinese_cht_mobile_v2.0_rec | ppocr/utils/dict/chinese_cht_dict.txt | 中文繁体识别|rec_chinese_cht_lite_train.yml|[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/chinese_cht_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/chinese_cht_mobile_v2.0_rec_train.tar) |
+| te_mobile_v2.0_rec | ppocr/utils/dict/te_dict.txt | 泰卢固文识别|rec_te_lite_train.yml|[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/te_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/te_mobile_v2.0_rec_train.tar) |
+| ka_mobile_v2.0_rec | ppocr/utils/dict/ka_dict.txt |卡纳达文识别|rec_ka_lite_train.yml|[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/ka_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/ka_mobile_v2.0_rec_train.tar) |
+| ta_mobile_v2.0_rec | ppocr/utils/dict/ta_dict.txt |泰米尔文识别|rec_ta_lite_train.yml|[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/ta_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/ta_mobile_v2.0_rec_train.tar) |
+| latin_mobile_v2.0_rec |  ppocr/utils/dict/latin_dict.txt | 拉丁文识别 |  [rec_latin_lite_train.yml](../../configs/rec/multi_language/rec_latin_lite_train.yml) |[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/latin_ppocr_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/latin_ppocr_mobile_v2.0_rec_train.tar) |
+| arabic_mobile_v2.0_rec | ppocr/utils/dict/arabic_dict.txt | 阿拉伯字母 | [rec_arabic_lite_train.yml](../../configs/rec/multi_language/rec_arabic_lite_train.yml) |[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/arabic_ppocr_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/arabic_ppocr_mobile_v2.0_rec_train.tar) |
+| cyrillic_mobile_v2.0_rec | ppocr/utils/dict/cyrillic_dict.txt | 斯拉夫字母 | [rec_cyrillic_lite_train.yml](../../configs/rec/multi_language/rec_cyrillic_lite_train.yml) |[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/cyrillic_ppocr_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/cyrillic_ppocr_mobile_v2.0_rec_train.tar) |
+| devanagari_mobile_v2.0_rec | ppocr/utils/dict/devanagari_dict.txt |梵文字母 | [rec_devanagari_lite_train.yml](../../configs/rec/multi_language/rec_devanagari_lite_train.yml) |[推理模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/devanagari_ppocr_mobile_v2.0_rec_infer.tar) / [训练模型](https://paddleocr.bj.bcebos.com/dygraph_v2.0/multilingual/devanagari_ppocr_mobile_v2.0_rec_train.tar) |
+
+- [基于Python脚本预测引擎推理](./inference.md)
+- [基于C++预测引擎推理](../../deploy/cpp_infer/readme.md)
+- [服务化部署](../../deploy/hubserving/readme.md)
 - [端侧部署](https://github.com/PaddlePaddle/PaddleOCR/blob/develop/deploy/lite/readme.md)
-- [Benchmark](./doc/doc_ch/benchmark.md)
 
 
 

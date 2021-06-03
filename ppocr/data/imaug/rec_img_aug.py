@@ -145,14 +145,6 @@ def resize_norm_img_srn(img, image_shape):
         img_new = cv2.resize(img, (imgH * 2, imgH))
     elif im_wid <= im_hei * 3:
         img_new = cv2.resize(img, (imgH * 3, imgH))
-    elif im_wid <= im_hei * 4:
-        img_new = cv2.resize(img, (imgH * 4, imgH))
-    elif im_wid <= im_hei * 5:
-        img_new = cv2.resize(img, (imgH * 5, imgH))
-    elif im_wid <= im_hei * 6:
-        img_new = cv2.resize(img, (imgH * 6, imgH))
-    elif im_wid <= im_hei * 7:
-        img_new = cv2.resize(img, (imgH * 7, imgH))
     else:
         img_new = cv2.resize(img, (imgW, imgH))
 

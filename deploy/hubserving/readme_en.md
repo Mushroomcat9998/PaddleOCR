@@ -2,7 +2,7 @@ English | [简体中文](readme.md)
 
 PaddleOCR provides 2 service deployment methods:
 - Based on **PaddleHub Serving**: Code path is "`./deploy/hubserving`". Please follow this tutorial.
-- Based on **PaddleServing**: Code path is "`./deploy/pdserving`". Please refer to the [tutorial](https://github.com/PaddlePaddle/PaddleOCR/blob/dygraph/deploy/pdserving/README.md) for usage.
+- Based on **PaddleServing**: Code path is "`./deploy/pdserving`". Please refer to the [tutorial](../../deploy/pdserving/README.md) for usage.
 
 # Service deployment based on PaddleHub Serving  
 
@@ -42,6 +42,10 @@ text direction classifier: ./inference/ch_ppocr_mobile_v2.0_cls_infer/
 ```  
 
 **The model path can be found and modified in `params.py`.** More models provided by PaddleOCR can be obtained from the [model library](../../doc/doc_en/models_list_en.md). You can also use models trained by yourself.
+
+* If you need to use a multi-language model, please modify the parameters of `cfg.rec_model_dir` and `cfg.rec_char_dict_path` in `ocr_rec/params.py` at the same time.
+The corresponding relationship between the multi-language model and the dictionary file can be found in [document](../../doc/doc_en/multi_languages_en.md#inference)
+
 
 ### 3. Install Service Module
 PaddleOCR provides 3 kinds of service modules, install the required modules according to your needs.
