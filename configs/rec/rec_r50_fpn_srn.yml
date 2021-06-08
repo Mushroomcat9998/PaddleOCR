@@ -1,26 +1,26 @@
 Global:
   use_gpu: True
-  epoch_num: 72
+  epoch_num: 100
   log_smooth_window: 20
-  print_batch_step: 5
-  save_model_dir: ./output/rec/srn_new
-  save_epoch_step: 3
+  print_batch_step: 200
+  save_model_dir: /content/drive/MyDrive/srn_new
+  save_epoch_step: 
   # evaluation is run every 5000 iterations after the 4000th iteration
-  eval_batch_step: [0, 5000]
+  eval_batch_step: [0, 2000]
   cal_metric_during_train: True
   pretrained_model: 
-  checkpoints:
+  checkpoints: /content/drive/MyDrive/srn_new/latest
   save_inference_dir:
   use_visualdl: False
   infer_img: doc/imgs_words/ch/word_1.jpg
   # for data or label process
-  character_dict_path: 
-  character_type: en
+  character_dict_path: /content/drive/MyDrive/vocab_temp.txt
+  character_type: japan
   max_text_length: 25
   num_heads: 8
   infer_mode: False
   use_space_char: False
-  save_res_path: ./output/rec/predicts_srn.txt
+  save_res_path: /content/drive/MyDrive/predicts_srn.txt
 
 
 Optimizer:
@@ -58,8 +58,9 @@ Metric:
 
 Train:
   dataset:
-    name: LMDBDataSet
-    data_dir: ./train_data/data_lmdb_release/training/
+    name: SimpleDataSet
+    data_dir: /content/data_32x128/short
+    label_file_list: ["/content/data_32x128/short/train.txt"]
     transforms:
       - DecodeImage: # load image
           img_mode: BGR
@@ -77,14 +78,15 @@ Train:
                       'gsrm_slf_attn_bias2'] # dataloader will return list in this order
   loader:
     shuffle: False
-    batch_size_per_card: 64
+    batch_size_per_card: 128
     drop_last: False
-    num_workers: 4
+    num_workers: 2
 
 Eval:
   dataset:
-    name: LMDBDataSet
-    data_dir: ./train_data/data_lmdb_release/validation/
+    name: SimpleDataSet
+    data_dir: /content/data_32x128/short
+    label_file_list: ["/content/data_32x128/short/test.txt"]
     transforms:
       - DecodeImage: # load image
           img_mode: BGR
@@ -103,5 +105,5 @@ Eval:
   loader:
     shuffle: False
     drop_last: False
-    batch_size_per_card: 32
-    num_workers: 4
+    batch_size_per_card: 128
+    num_workers: 2
